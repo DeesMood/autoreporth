@@ -170,7 +170,7 @@ function ceefFormatLogs(inputText){
             continue;
         }
         // If it's a count
-        else if (/(^\d*$)|(\d*k$)/.test(currentLine)){
+        else if (/(^\d*$)|(\d*k$)|(\d*M$)/.test(currentLine)){
             continue;
         }
         // If it's user agent
