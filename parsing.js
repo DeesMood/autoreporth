@@ -55,7 +55,9 @@ const severityMap = {
 
     "ET TROJAN DNS Reply Sinkhole Microsoft NO-IP Domain": "High",
     "ET TROJAN Known Hostile Domain ant.trenz.pl Lookup": "High",
-    "NETBIOS SMB srvsvc named pipe creation attempt": "High"
+    "NETBIOS SMB srvsvc named pipe creation attempt": "High",
+
+    "stream5: TCP Timestamp is missing": "Medium"
 };
 const abuseipkey = '<secret_key>';
 const categoriesMap = {
