@@ -182,6 +182,13 @@ function ceefFormatLogs(inputText){
                 currentLine = lines[i].trim();
             }
         }
+        // If it's referers
+        else if (currentLine === "Referers"){
+            while(!(lines[i+1].trim() in cfHeaders)){
+                i++;
+                currentLine = lines[i].trim();
+            }
+        }
         // If for some reason the input is empty
         else if (currentLine === ""){
             continue;
