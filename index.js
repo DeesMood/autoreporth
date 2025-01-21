@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { formatLogs, ceefFormatLogs, greetTime, formatIP, stormwallLogs } = require('./parsing.js');
 const { auth } = require('./auth.js');
+const { fetchBGPAPI } = require('./utils.js');
 
 const app = express();
 const PORT = 3000;
@@ -71,6 +72,12 @@ app.post('/stormwall', (req, res) => {
     let salam = greetTime();
     let formatted = stormwallLogs(inputText);
     res.render('stormwall', { formattedText: `${salam}\n\n${formatted}` });
+});
+
+// network parse
+app.get('/network', (req, res) => {
+    let upstreams = '';
+    res.render('network', { formattedText: null });
 });
 
 app.listen(PORT, () => {

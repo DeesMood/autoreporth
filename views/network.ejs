@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <style>
+      .button {
+         display: flex;
+         flex-direction: column;
+         padding: 10px 15px;
+         background-color: #8f9091; /* Button color */
+         color: white; /* Text color */
+         text-decoration: none; /* Remove underline */
+      }
+      .button:hover {
+         background-color: #c0c1c1; /* Lighter color on hover */
+      }
+      .button.active {
+         background-color: #007bff; /* Highlighted color when active */
+      }
+      #mode-select{
+         margin-left: 20px;
+      }
+   </style>
+   <title>network autoreport v1.0</title>
+</head>
+<body>
+   <h1>network autoreport v1.0-dev</h1>
+   <h1 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1>
+   <form action="/network" method="POST">
+      <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here..."><%= formattedText %></textarea>
+      <br>
+      <button type="submit">Generate Report</button>
+   </form>
+   
+</body>
+</html>
+
+<script>
+   const buttons = document.querySelectorAll(".button");
+
+   buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+         // Remove 'active' class from all buttons
+         buttons.forEach((btn) => btn.classList.remove("active"));
+
+         // Add 'active'class to the clicked button
+         button.classList.add("active");
+      });
+   });
+</script>
