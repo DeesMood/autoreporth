@@ -80,6 +80,11 @@ app.get('/network', (req, res) => {
     res.render('network', { formattedText: null });
 });
 
+app.post('/network', (req, res) => {
+    let test = fetchBGPAPI();
+    res.render('network', { formattedText: test });
+});
+
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });

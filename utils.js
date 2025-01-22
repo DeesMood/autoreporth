@@ -17,26 +17,31 @@ async function fetchBGPAPI() {
         '103.185.38.0/24': 'Dewacloud'
     }
 
-    const allPrefixes = { nmePrefixes, mtenPrefixes, edgePrefixes };
+    const allPrefixes = { ...nmePrefixes, ...mtenPrefixes, ...edgePrefixes };
 
-    const url = new URL(`https://api.bgpview.io/prefix/${allPrefixes}`);
-
-    try {
-        const response = await fetch(url, {
-            method: 'GET'
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const results = data.data.results;
-
-        console.log()
-
-    } catch (error) {
-        console.error('Error:', error);
-        return 'Error occurred';
+    for (const prefix of Object.keys(allPrefixes)) {
+        const url = new URL(`https://api.bgpview.io/prefix/${prefix}`);
+        console.log(url);
     }
+
+    // try {
+    //     const response = await fetch(url, {
+    //         method: 'GET'
+    //     });
+
+    //     if (!response.ok) {
+    //         throw new Error(`HTTP error! Status: ${response.status}`);
+    //     }
+
+    //     const data = await response.json();
+    //     const results = data.data.results;
+
+    //     console.log()
+
+    // } catch (error) {
+    //     console.error('Error:', error);
+    //     return 'Error occurred';
+    // }
 }
+
+fetchBGPAPI();
