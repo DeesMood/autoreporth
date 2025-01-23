@@ -20,28 +20,27 @@ async function fetchBGPAPI() {
     const allPrefixes = { ...nmePrefixes, ...mtenPrefixes, ...edgePrefixes };
 
     for (const prefix of Object.keys(allPrefixes)) {
-        const url = new URL(`https://api.bgpview.io/prefix/${prefix}`);
-        console.log(url);
     }
+    
+    const url = new URL(`https://api.bgpview.io/prefix/103.167.132.0/24`);
+    try {
+        const response = await fetch(url, {
+            method: 'GET'
+        });
 
-    // try {
-    //     const response = await fetch(url, {
-    //         method: 'GET'
-    //     });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
 
-    //     if (!response.ok) {
-    //         throw new Error(`HTTP error! Status: ${response.status}`);
-    //     }
+        const data = await response.json();
+        const results = data.data.asns[0].prefix_upstreams;
 
-    //     const data = await response.json();
-    //     const results = data.data.results;
+        console.log(results)
 
-    //     console.log()
-
-    // } catch (error) {
-    //     console.error('Error:', error);
-    //     return 'Error occurred';
-    // }
+    } catch (error) {
+        console.error('Error:', error);
+        return 'Error occurred';
+    }
 }
 
 fetchBGPAPI();

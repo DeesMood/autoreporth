@@ -28,7 +28,38 @@
    <h1>network autoreport v1.0-dev</h1>
    <h1 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1>
    <form action="/network" method="POST">
-      <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here..."><%= formattedText %></textarea>
+      <% if (formattedText) { %>
+         <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here...">
+           <%= formattedText %>
+         </textarea>
+       <% } else { %>
+         <table border="1" style="width: 60vw; border-collapse: collapse;">
+             <thead>
+                 <tr>
+                     <th>Header 1</th>
+                     <th>Header 2</th>
+                     <th>Header 3</th>
+                 </tr>
+             </thead>
+             <tbody>
+                 <tr>
+                     <td>Row 1 Col 1</td>
+                     <td>Row 1 Col 2</td>
+                     <td>Row 1 Col 3</td>
+                 </tr>
+                 <tr>
+                     <td>Row 2 Col 1</td>
+                     <td>Row 2 Col 2</td>
+                     <td>Row 2 Col 3</td>
+                 </tr>
+                 <tr>
+                     <td colspan="3">
+                        <strong>Section 1</strong>
+                     </td>
+                 </tr>
+             </tbody>
+         </table>
+       <% } %>       
       <br>
       <button type="submit">Generate Report</button>
    </form>
@@ -36,7 +67,7 @@
 </body>
 </html>
 
-<script>
+<!-- <script>
    const buttons = document.querySelectorAll(".button");
 
    buttons.forEach((button) => {
@@ -48,4 +79,4 @@
          button.classList.add("active");
       });
    });
-</script>
+</script> -->
