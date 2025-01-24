@@ -15,50 +15,51 @@
       .button:hover {
          background-color: #c0c1c1; /* Lighter color on hover */
       }
-      .button.active {
-         background-color: #007bff; /* Highlighted color when active */
-      }
-      #mode-select{
-         margin-left: 20px;
-      }
    </style>
    <title>network autoreport v1.0</title>
 </head>
 <body>
    <h1>network autoreport v1.0-dev</h1>
    <h1 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1>
-   <form action="/network" method="POST">
-      <% if (formattedText) { %>
+   <% if (formattedText) { %>
+      <form action="/network" method="POST">
          <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here...">
            <%= formattedText %>
          </textarea>
        <% } else { %>
          <table border="1" style="width: 60vw; border-collapse: collapse;">
              <thead>
+                <tr>
+                    <td colspan="4">
+                       <strong>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</strong>
+                    </td>
+                </tr>
                  <tr>
-                     <th>Header 1</th>
-                     <th>Header 2</th>
-                     <th>Header 3</th>
+                     <th>IP Blocks/CIDR</th>
+                     <th>Description</th>
+                     <th>Upstreams</th>
+                     <th>Stormwall Status</th>
                  </tr>
-             </thead>
-             <tbody>
-                 <tr>
-                     <td>Row 1 Col 1</td>
-                     <td>Row 1 Col 2</td>
-                     <td>Row 1 Col 3</td>
-                 </tr>
-                 <tr>
-                     <td>Row 2 Col 1</td>
-                     <td>Row 2 Col 2</td>
-                     <td>Row 2 Col 3</td>
-                 </tr>
-                 <tr>
-                     <td colspan="3">
-                        <strong>Section 1</strong>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td colspan="4">
+                        <strong>NME Equinix SG, Singapore (mrtg.newmediaexpress.com)</strong>
                      </td>
                  </tr>
-             </tbody>
+                  <% if (tableData.length > 0) { %>
+                     <% tableData.forEach(row => { %>
+                        <tr>
+                           <td><%= row.prefix %></td>
+                           <td><%=  %></td>
+                           <td><%=  %></td>
+                           <td><%=  %></td>
+                        </tr>
+                        <% }) %>
+                  <% } %>
+               </tbody>
          </table>
+
        <% } %>       
       <br>
       <button type="submit">Generate Report</button>
@@ -67,7 +68,10 @@
 </body>
 </html>
 
-<!-- <script>
+<script>
+
+   /* Selection buttons logic that controls 
+   what selection is active */
    const buttons = document.querySelectorAll(".button");
 
    buttons.forEach((button) => {
@@ -79,4 +83,7 @@
          button.classList.add("active");
       });
    });
-</script> -->
+
+
+
+</script>
