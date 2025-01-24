@@ -1,3 +1,5 @@
+const { resolve } = require("path");
+
 /* All Dewaweb's IP Blocks */
 const nmePrefixes = {
     '103.145.227.0/24': 'Dewaweb SG Servers',
@@ -35,14 +37,72 @@ function addLabelToPrefixes(prefixes, label) {
 
 /* Stormwall Checking
 Finding out whether or not prefix is on stormwall */
-function stormwallCheck(upstream){
-    // isStormwall = (upstream.asn === 59796) ? true : false;
-    // if (upstream.asn === 59796 && )
+function stormwallCheck(upstreams){
+
+    // Check whether or not there is a stormwall upstream
+    let isStormwall = false;
+    upstreams.forEach(upstream => {
+        if(upstream.asn === 59796) {
+            isStormwall = true;
+        }
+    });
+
+    // Logic for stormwall status
+    if(isStormwall && (upstreams.length === 1)){
+        return 'Full Stormwall';
+    } else if (isStormwall && (upstreams.length > 1)) {
+        return 'Partial Stormwall';
+    } else {
+        return 'No Stormwall';
+    }
+}
+
+async function fetchData(prefix, url){
+
+    let retries = 3; // Number of retry attempts
+    let delay = 1000; // Initial delay in milliseconds
+
+    while(retries > 0) {
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET'
+            });
+    
+            if (response.ok) {
+                return await response.json();
+            } else if (response.status === 429){
+                const retryAfter = response.headers.get('Retry-after');
+                const waitTime = retryAfter ? parseInt(retryAfter, 10) * 1000 : delay;
+                console.warn(`Rate limited. Retrying in ${waitTime}s...`);
+
+                // Wait before retrying
+                await new Promise((resolve) => setTimeout(resolve, waitTime));
+                // Exponential backoff
+                delay *= 2; 
+                retries--;
+            } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error(`Error fetching ${prefix}: ${error.message}`);
+            retries--;
+        }
+    }
+
+    console.error(`Failed to fetch data for prefix: ${prefix} after retries.`);
+    // Return null if all retries fail
+    return null;
+}
+
+/* Setup a delay */
+async function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /* Send an API request to bgpview.io
 Process the request in a table format used in network page */
-async function fetchBGPAPI() {
+async function fetchBGPAPI(){
 
     // Combine all prefixes to a list and add label
     const allPrefixes = {
@@ -54,38 +114,46 @@ async function fetchBGPAPI() {
 
     // Array to store results in JSON 
     const results = [];
-
-    for (const [prefix, data] of Object.entries(allPrefixes)) {
-    }
     
-    const url = new URL(`https://api.bgpview.io/prefix/103.167.136.0/24`);
-    try {
-        const response = await fetch(url, {
-            method: 'GET'
-        });
+    for (const [prefix, attr] of Object.entries(allPrefixes)) {
+        const url = new URL(`https://api.bgpview.io/prefix/${prefix}`);
+        const desc = attr.description;
+        const label = attr.label;
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
+        const data = await fetchData(prefix, url);
         const upstreams = data.data.asns[0].prefix_upstreams;
+        const stormwall = stormwallCheck(upstreams);
 
         upstreams.forEach(upstream => {
-            results.push({
-                // prefix,
-                // desc,
-                upstream: `${upstream.description} (AS${upstream.asn})`,
-                stormwall: stormwallCheck(upstream)
-            });
+            // Find an existing entry with the same prefix, desc, and stormwall
+            const existingEntry = results.find(result => 
+                result.prefix === prefix &&
+                result.desc === desc &&
+                result.stormwall === stormwall &&
+                result.label === label
+            );
+
+            if (existingEntry) {
+                existingEntry.upstream += `\n${upstream.description} (AS${upstream.asn})`;
+            } else {
+                results.push({
+                    prefix,
+                    desc,
+                    upstream: `${upstream.description} (AS${upstream.asn})`,
+                    stormwall,
+                    label
+                });
+            }
         });
 
-        console.log(upstreams);
-
-    } catch (error) {
-        console.error('Error:', error);
-        return 'Error occurred';
+        // Wait 0.25 second
+        await delay(250);
     }
+
+    return results
 }
 
-fetchBGPAPI()
+(async () => {
+    const res = await fetchBGPAPI();
+    console.log(res);
+})();
