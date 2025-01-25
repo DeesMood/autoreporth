@@ -3,79 +3,98 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="/styles/networkcss">
+   <link rel="stylesheet" href="./styles/loading.css">
+   <link rel="stylesheet" href="./styles/network.css">
    <title>network autoreport v1.0</title>
 </head>
 <body>
-   <h1>network autoreport v1.0-dev</h1>
-   <h1 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1>
-   <% if (formattedText) { %>
-      <form action="/network" method="POST">
-         <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here...">
-           <%= formattedText %>
-         </textarea>
-       <% } else { %>
-         <table border="1" style="width: 60vw; border-collapse: collapse;">
-             <thead>
-                <tr>
-                    <td colspan="4">
-                       <strong>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</strong>
-                    </td>
-                </tr>
-                  <tr>
-                     <th>IP Blocks/CIDR</th>
-                     <th>Description</th>
-                     <th>Upstreams</th>
-                     <th>Stormwall Status</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <% if (tableData.length > 0) { %>
-                     <% let curDataCenter = null; %>
-                     <% tableData.forEach(row => { %>
-                        <% if (curDataCenter !== row.label) { %>
-                           <tr>
-                              <td colspan="4">
-                                 <strong><%= row.label %></strong>
-                              </td>
-                          </tr>
-                        <% } %>
-                        <% curDataCenter = row.label; %>
-                           <tr>
-                              <td><%= row.prefix %></td>
-                              <td><%= row.desc  %></td>
-                              <td><%- row.upstream.replace(/#/g, '<br>') %></td>
-                              <td><%= row.stormwall %></td>
-                           </tr>
-                        <% }) %>
-                  <% } %>
-               </tbody>
-         </table>
 
-       <% } %>       
-      <br>
-      <button type="submit">Generate Report</button>
-   </form>
+   <!-- Loading Screen -->
+   <div id="loading-overlay">Loading data, please wait...</div>
+
+   <!-- Actual Page -->
+   <div id="data-container" hidden>
+      <h1>Network autoreport v1.0-dev</h1>
+      <h2 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1>
+      <% if (formattedText) { %>
+         <form action="/network" method="POST">
+            <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here...">
+              <%= formattedText %>
+            </textarea>
+          <% } else { %>
+            <table border="1">
+                <thead>
+                   <tr>
+                       <td colspan="4">
+                          <strong>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</strong>
+                       </td>
+                   </tr>
+                     <tr>
+                        <th>IP Blocks/CIDR</th>
+                        <th>Description</th>
+                        <th>Upstreams</th>
+                        <th>Stormwall Status</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <% if (tableData) { %>
+                        <% let curDataCenter = null; %>
+                        <% tableData.forEach(row => { %>
+                           <% if (curDataCenter !== row.label) { %>
+                              <tr>
+                                 <td colspan="4">
+                                    <strong><%= row.label %></strong>
+                                 </td>
+                             </tr>
+                           <% } %>
+                           <% curDataCenter = row.label; %>
+                              <tr>
+                                 <td><%= row.prefix %></td>
+                                 <td><%= row.desc  %></td>
+                                 <td><%- row.upstream.replace(/#/g, '<br>') %></td>
+                                 <td><%= row.stormwall %></td>
+                              </tr>
+                           <% }) %>
+                     <% } else { %>
+                        <tr>
+                           <td colspan="4">Loading...</td>
+                        </tr>
+                     <% } %>
+                  </tbody>
+            </table>
+          <% } %>       
+         <br>
+         <button type="submit">Generate Report</button>
+      </form>
+   </div>
    
 </body>
 </html>
 
 <script>
 
-   /* Selection buttons logic that controls 
-   what selection is active */
-   const buttons = document.querySelectorAll(".button");
+   function fetchingData() {
+      // Show the loading overlay
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const dataContainer = document.getElementById('data-container');
 
-   buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-         // Remove 'active' class from all buttons
-         buttons.forEach((btn) => btn.classList.remove("active"));
+      loadingOverlay.removeAttribute('hidden');
+      dataContainer.setAttribute('hidden', true);
 
-         // Add 'active'class to the clicked button
-         button.classList.add("active");
-      });
-   });
+      try {
+         // Fetch data from the server
+         fetch('/bgpapi');
 
+         // Show the data container
+         loadingOverlay.setAttribute('hidden', true);
+         dataContainer.removeAttribute('hidden');
+      } catch (error) {
+         console.error('Error fetching data:', error);
+         alert('Failed to load data');
+      }
+   }
 
+   // Fetch data on page load
+   window.onload = fetchingData;
 
 </script>

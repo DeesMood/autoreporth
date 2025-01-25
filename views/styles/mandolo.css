@@ -3,13 +3,7 @@
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Space between header and footer */
-    align-items: center; /* Center content horizontally */
     height: 100vh; /* Full viewport height */
-    margin: 0; /* Remove default margin */
-    font-family: Arial, sans-serif; /* Set a default font */
 }
 
 .container {
@@ -20,7 +14,7 @@ body {
     flex-grow: 1; /* Allow this container to grow */
 }
 
-.button {
+button {
     display: inline-block;
     padding: 10px 15px;
     background-color: #007BFF; /* Button color */
@@ -30,25 +24,11 @@ body {
     margin-top: 20px; /* Add space above the button */
 }
 
-.button:hover {
+button:hover {
     background-color: #0056b3; /* Darker color on hover */
 }
 
 footer {
     text-align: center; /* Center footer text */
     padding: 10px; /* Add padding to the footer */
-}
-
-#random{
-    text-align: left;
-    position: absolute;
-    z-index: 1;
-    color: white;
-}
-
-#ship{
-    position: absolute;
-    z-index: 1;
-    width: 100px;
-    height: auto;
 }

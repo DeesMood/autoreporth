@@ -74,16 +74,21 @@ app.post('/stormwall', (req, res) => {
     res.render('stormwall', { formattedText: `${salam}\n\n${formatted}` });
 });
 
-// network parse
-app.get('/network', async (req, res) => {
+/* network parsing */
+app.get('/network', (req, res) => {
+    // Render the network page
+    res.render('network', { formattedText: null, tableData: null });
+});
+
+app.get('/bgpapi', async (req, res) => {
     try {
+
         // Fetch the data (either from cache or fresh data)
         console.log("Fetching BGP API data...");
-        const networkTable = await fetchBGPAPI();
+        const networkData = await fetchBGPAPI();
         console.log("BGP API data fetched successfully!");
 
-        // Render the EJS template with the tableData
-        res.render('network', { formattedText: null, tableData: networkTable });
+        res.render('network', { formattedText: null, tableData: networkData });
 
     } catch (error) {
         console.error('Error fetching network data:', error.message);
