@@ -3,19 +3,7 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <style>
-      .button {
-         display: flex;
-         flex-direction: column;
-         padding: 10px 15px;
-         background-color: #8f9091; /* Button color */
-         color: white; /* Text color */
-         text-decoration: none; /* Remove underline */
-      }
-      .button:hover {
-         background-color: #c0c1c1; /* Lighter color on hover */
-      }
-   </style>
+   <link rel="stylesheet" href="/styles/networkcss">
    <title>network autoreport v1.0</title>
 </head>
 <body>
@@ -34,27 +22,31 @@
                        <strong>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</strong>
                     </td>
                 </tr>
-                 <tr>
+                  <tr>
                      <th>IP Blocks/CIDR</th>
                      <th>Description</th>
                      <th>Upstreams</th>
                      <th>Stormwall Status</th>
-                 </tr>
+                  </tr>
                </thead>
                <tbody>
-                  <tr>
-                     <td colspan="4">
-                        <strong>NME Equinix SG, Singapore (mrtg.newmediaexpress.com)</strong>
-                     </td>
-                 </tr>
                   <% if (tableData.length > 0) { %>
+                     <% let curDataCenter = null; %>
                      <% tableData.forEach(row => { %>
-                        <tr>
-                           <td><%= row.prefix %></td>
-                           <td><%=  %></td>
-                           <td><%=  %></td>
-                           <td><%=  %></td>
-                        </tr>
+                        <% if (curDataCenter !== row.label) { %>
+                           <tr>
+                              <td colspan="4">
+                                 <strong><%= row.label %></strong>
+                              </td>
+                          </tr>
+                        <% } %>
+                        <% curDataCenter = row.label; %>
+                           <tr>
+                              <td><%= row.prefix %></td>
+                              <td><%= row.desc  %></td>
+                              <td><%- row.upstream.replace(/#/g, '<br>') %></td>
+                              <td><%= row.stormwall %></td>
+                           </tr>
                         <% }) %>
                   <% } %>
                </tbody>

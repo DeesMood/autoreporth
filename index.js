@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { formatLogs, ceefFormatLogs, greetTime, formatIP, stormwallLogs } = require('./parsing.js');
 const { auth } = require('./auth.js');
-const { fetchBGPAPI } = require('./utils.js');
+const { fetchBGPAPI } = require('./BGPutils.js');
 
 const app = express();
 const PORT = 3000;
@@ -75,16 +75,30 @@ app.post('/stormwall', (req, res) => {
 });
 
 // network parse
-app.get('/network', (req, res) => {
-    let upstreams = '';
-    res.render('network', { formattedText: null });
+app.get('/network', async (req, res) => {
+    try {
+        // Fetch the data (either from cache or fresh data)
+        console.log("Fetching BGP API data...");
+        const networkTable = await fetchBGPAPI();
+        console.log("BGP API data fetched successfully!");
+
+        // Render the EJS template with the tableData
+        res.render('network', { formattedText: null, tableData: networkTable });
+
+    } catch (error) {
+        console.error('Error fetching network data:', error.message);
+        res.status(500).send('Error loading network data');
+    }
 });
 
 app.post('/network', (req, res) => {
-    let test = fetchBGPAPI();
     res.render('network', { formattedText: test });
 });
 
+// Run the server
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
+
+
+    

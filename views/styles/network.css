@@ -1,0 +1,21 @@
+.button {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    background-color: #8f9091; /* Button color */
+    color: white; /* Text color */
+    text-decoration: none; /* Remove underline */
+ }
+
+ .button:hover {
+    background-color: #c0c1c1; /* Lighter color on hover */
+ }
+
+td {
+    border: 1px solid #000;
+}
+
+tr td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}

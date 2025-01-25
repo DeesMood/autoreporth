@@ -1,4 +1,7 @@
-const { resolve } = require("path");
+/* GLOBAL Cache for network upstream table */
+const cache = new Map();
+// Cache for 1 hour (in ms)
+const CACHE_EXPIRY = 60 * 60 * 1000;
 
 /* All Dewaweb's IP Blocks */
 const nmePrefixes = {
@@ -106,15 +109,27 @@ async function fetchBGPAPI(){
 
     // Combine all prefixes to a list and add label
     const allPrefixes = {
-        ...addLabelToPrefixes(nmePrefixes, 'NME'),
-        ...addLabelToPrefixes(mtenPrefixes, 'MTEN'),
-        ...addLabelToPrefixes(edgePrefixes, 'Edge'),
-        ...addLabelToPrefixes(contaboPrefixes, 'Contabo')
+        ...addLabelToPrefixes(nmePrefixes, 'NME Equinix SG, Singapore (mrtg.newmediaexpress.com)'),
+        ...addLabelToPrefixes(mtenPrefixes, 'NEX DC M-TEN Jakarta (prtg.cloudata.co.id)'),
+        ...addLabelToPrefixes(edgePrefixes, 'Edge2 DC, Kuningan, Jakarta (prtg-netmon.indo.net.id)'),
+        ...addLabelToPrefixes(contaboPrefixes, 'Contabo, Seattle, USA (prtg-netmon.indo.net.id)')
     };
 
     // Array to store results in JSON 
-    const results = [];
+    let results = [];
+
+    // Check if cached data exists and is still valid
+    let cachedData = null;
+    if (cache.get('tableData')){
+        cachedData = cache.get('tableData');
+    }
+    if(cachedData && (Date.now() - cachedData.timestamp) < CACHE_EXPIRY) {
+        console.log("Serving data from cache.");
+        // Returning cached data if valid
+        return cachedData.data;
+    }
     
+    // If no valid cache, fetch data
     for (const [prefix, attr] of Object.entries(allPrefixes)) {
         const url = new URL(`https://api.bgpview.io/prefix/${prefix}`);
         const desc = attr.description;
@@ -134,7 +149,7 @@ async function fetchBGPAPI(){
             );
 
             if (existingEntry) {
-                existingEntry.upstream += `\n${upstream.description} (AS${upstream.asn})`;
+                existingEntry.upstream += `#${upstream.description} (AS${upstream.asn})`;
             } else {
                 results.push({
                     prefix,
@@ -150,10 +165,14 @@ async function fetchBGPAPI(){
         await delay(250);
     }
 
-    return results
+    // Cache the fetched data
+    cache.set('tableData', {
+        data: results,
+        // Update the timestamp for cache expiry
+        timestamp: Date.now()
+    });
+
+    return results;
 }
 
-(async () => {
-    const res = await fetchBGPAPI();
-    console.log(res);
-})();
+module.exports = { fetchBGPAPI };
