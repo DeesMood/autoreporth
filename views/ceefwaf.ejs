@@ -17,8 +17,7 @@
    </div>
    <h1 style="color: #F07E33;">Ceefwaf autoreport v1.0-dev</h1>
    <form action="/ceefwaf" method="POST">
-      <h1 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1>
-      <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here..."><%= formattedText %></textarea>
+      <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here..." oncopy="showPopupAlert('MOHON JANGAN LUPA GANTI PLACEHOLDERNYA!')"><%= formattedText %></textarea>
       <br>
       <button type="submit">Format</button>
    </form>

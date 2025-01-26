@@ -74,10 +74,25 @@ app.post('/stormwall', (req, res) => {
     res.render('stormwall', { formattedText: `${salam}\n\n${formatted}` });
 });
 
+let networkData;
+
 /* network parsing */
 app.get('/network', (req, res) => {
-    // Render the network page
-    res.render('network', { formattedText: null, tableData: null });
+    try {
+        // Assign network data variable
+        if (app.locals.networkData) {
+            networkData = app.locals.networkData;
+        } else {
+            networkData = null;
+        }
+
+        // Render the network page
+        res.render('network', { formattedText: null, tableData: networkData });
+    } catch (error) {
+        console.error('Error assigning local network data:', error.message);
+        res.status(500).send('Error assigning local network data');
+    }
+
 });
 
 app.get('/bgpapi', async (req, res) => {
@@ -85,10 +100,12 @@ app.get('/bgpapi', async (req, res) => {
 
         // Fetch the data (either from cache or fresh data)
         console.log("Fetching BGP API data...");
-        const networkData = await fetchBGPAPI();
+        networkData = await fetchBGPAPI();
         console.log("BGP API data fetched successfully!");
 
-        res.render('network', { formattedText: null, tableData: networkData });
+        app.locals.networkData = networkData;
+
+        res.redirect('network');
 
     } catch (error) {
         console.error('Error fetching network data:', error.message);

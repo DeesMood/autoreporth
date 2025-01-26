@@ -3,19 +3,22 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="./styles/loading.css">
    <link rel="stylesheet" href="./styles/network.css">
+   <link rel="stylesheet" href="./styles/loading.css">
+   <script src="./scripts/loading.js"></script>
    <title>network autoreport v1.0</title>
 </head>
 <body>
 
    <!-- Loading Screen -->
-   <div id="loading-overlay">Loading data, please wait...</div>
+   <div id="loading-overlay">
+      <span>Loading data, please wait...</span>
+   </div>
 
    <!-- Actual Page -->
    <div id="data-container" hidden>
-      <h1>Network autoreport v1.0-dev</h1>
-      <h2 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1>
+      <h1 class="rainbow">Network autoreport v1.0-dev</h1>
+      <!-- <h2 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1> -->
       <% if (formattedText) { %>
          <form action="/network" method="POST">
             <textarea style="height: 80vh; width: 60vw;" name="text" rows="150" cols="50" placeholder="Enter your text here...">
@@ -25,15 +28,15 @@
             <table border="1">
                 <thead>
                    <tr>
-                       <td colspan="4">
-                          <strong>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</strong>
-                       </td>
+                       <th colspan="4" style="text-align: center; background-color: #007BFF; color: white;">
+                          <strong><h3>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</h3></strong>
+                       </th>
                    </tr>
                      <tr>
-                        <th>IP Blocks/CIDR</th>
-                        <th>Description</th>
-                        <th>Upstreams</th>
-                        <th>Stormwall Status</th>
+                        <td><strong>IP Blocks/CIDR</strong></td>
+                        <td><strong>Description</strong></td>
+                        <td><strong>Upstreams</strong></td>
+                        <td><strong>Stormwall Status</strong></td>
                      </tr>
                   </thead>
                   <tbody>
@@ -42,9 +45,9 @@
                         <% tableData.forEach(row => { %>
                            <% if (curDataCenter !== row.label) { %>
                               <tr>
-                                 <td colspan="4">
+                                 <th colspan="4">
                                     <strong><%= row.label %></strong>
-                                 </td>
+                                 </th>
                              </tr>
                            <% } %>
                            <% curDataCenter = row.label; %>
@@ -64,37 +67,25 @@
             </table>
           <% } %>       
          <br>
-         <button type="submit">Generate Report</button>
+         <button type="submit">Format</button>
       </form>
    </div>
    
 </body>
 </html>
 
-<script>
+<% if (!tableData) { %>
+   <script>
 
-   function fetchingData() {
-      // Show the loading overlay
-      const loadingOverlay = document.getElementById('loading-overlay');
-      const dataContainer = document.getElementById('data-container');
+      // Fetch data on page load
+      window.onload = fetchingData;
 
-      loadingOverlay.removeAttribute('hidden');
-      dataContainer.setAttribute('hidden', true);
+   </script>
+<% } else { %>
+   <script>
 
-      try {
-         // Fetch data from the server
-         fetch('/bgpapi');
+      // Make page visible if data is fetched
+      hasData();
 
-         // Show the data container
-         loadingOverlay.setAttribute('hidden', true);
-         dataContainer.removeAttribute('hidden');
-      } catch (error) {
-         console.error('Error fetching data:', error);
-         alert('Failed to load data');
-      }
-   }
-
-   // Fetch data on page load
-   window.onload = fetchingData;
-
-</script>
+   </script>
+<% } %>
