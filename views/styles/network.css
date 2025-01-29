@@ -1,21 +1,4 @@
-* {
-    font-family: monospace;
-}
-
-.button {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 15px;
-    background-color: #8f9091; /* Button color */
-    color: white; /* Text color */
-    text-decoration: none; /* Remove underline */
- }
-
- .button:hover {
-    background-color: #c0c1c1; /* Lighter color on hover */
- }
-
- table {
+table {
     border-collapse: collapse;
     border: 1px solid #ccc;
 }

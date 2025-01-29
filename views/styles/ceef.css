@@ -1,34 +1,8 @@
-* {
-    font-family: monospace;
-}
-
-body {
-    height: 100vh; /* Full viewport height */
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
-    flex-grow: 1; /* Allow this container to grow */
-}
-
 button {
-    display: inline-block;
-    padding: 10px 15px;
     background-color: #F07E33; /* Button color */
     color: white; /* Text color */
-    text-decoration: none; /* Remove underline */
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 20px; /* Add space above the button */
 }
 
 button:hover {
     background-color: #b66732; /* Darker color on hover */
-}
-
-footer {
-    text-align: center; /* Center footer text */
-    padding: 10px; /* Add padding to the footer */
 }

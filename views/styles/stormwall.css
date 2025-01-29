@@ -1,11 +1,3 @@
-* {
-    font-family: monospace;
-}
-
-body {
-    height: 100vh; /* Full viewport height */
-}
-
 .container {
     display: flex;
     flex-direction: column;
@@ -15,20 +7,10 @@ body {
 }
 
 button {
-    display: inline-block;
-    padding: 10px 15px;
     background-color: #3BB267; /* Button color */
     color: white; /* Text color */
-    text-decoration: none; /* Remove underline */
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 20px; /* Add space above the button */
 }
 
 button:hover {
     background-color: #92c0a3; /* Darker color on hover */
-}
-
-footer {
-    text-align: center; /* Center footer text */
-    padding: 10px; /* Add padding to the footer */
 }

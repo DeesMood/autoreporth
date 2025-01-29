@@ -1,15 +1,9 @@
-* {
-    font-family: monospace;
-}
-
 body {
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Space between header and footer */
     align-items: center; /* Center content horizontally */
-    height: 100vh; /* Full viewport height */
     margin: 0; /* Remove default margin */
-    font-family: Arial, sans-serif; /* Set a default font */
 }
 
 .container {
@@ -23,11 +17,11 @@ body {
 .button {
     display: inline-block;
     padding: 10px 15px;
-    background-color: #007BFF; /* Button color */
-    color: white; /* Text color */
     text-decoration: none; /* Remove underline */
     border-radius: 5px; /* Rounded corners */
     margin-top: 20px; /* Add space above the button */
+    background-color: #007BFF; /* Button color */
+    color: white; /* Text color */
 }
 
 .button:hover {
