@@ -68,8 +68,17 @@ async function fetchData(prefix, url){
     while(retries > 0) {
 
         try {
+
+            const headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+                "Accept": "application/json, text/plain, */*",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Connection": "keep-alive"
+            };
+
             const response = await fetch(url, {
-                method: 'GET'
+                method: 'GET',
+                headers: headers
             });
     
             if (response.ok) {
@@ -161,8 +170,8 @@ async function fetchBGPAPI(){
             }
         });
 
-        // Wait 0.25 second
-        await delay(250);
+        // Wait 0.5 second
+        await delay(500);
     }
 
     // Cache the fetched data

@@ -6,6 +6,7 @@
    <link rel="stylesheet" href="./styles/network.css">
    <link rel="stylesheet" href="./styles/loading.css">
    <link rel="stylesheet" href="./styles/all.css">
+   <link rel="stylesheet" href="./styles/parser.css">
    <script src="./scripts/loading.js"></script>
    <title>network autoreport v1.0</title>
 </head>
@@ -18,7 +19,7 @@
 
    <!-- Actual Page -->
    <div id="data-container" hidden>
-      <h1 class="rainbow">Network autoreport v1.0-dev</h1>
+      <h1 class="rainbow">Network autoreport <span class="version">v1.0-dev</span></h1>
       <!-- <h2 style="color: red;">MOHON JANGAN LUPA GANTI PLACEHOLDERNYA</h1> -->
       <% if (formattedText) { %>
          <form action="/network" method="POST">

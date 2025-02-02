@@ -114,7 +114,8 @@ app.get('/bgpapi', async (req, res) => {
 });
 
 app.post('/network', (req, res) => {
-    res.render('network', { formattedText: test });
+    let justtest = "testing";
+    res.render('network', { formattedText: justtest });
 });
 
 // Run the server
