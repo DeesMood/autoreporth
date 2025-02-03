@@ -2,14 +2,6 @@ h1 {
     color: #3BB267;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
-    flex-grow: 1; /* Allow this container to grow */
-}
-
 button {
     background-color: #3BB267; /* Button color */
     color: white; /* Text color */

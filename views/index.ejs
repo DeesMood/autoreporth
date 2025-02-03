@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles/index.css">
     <link rel="stylesheet" href="./styles/all.css">
+    <script src="./scripts/fun.js"></script>
     <title>Portal Utility Reporting</title>
 </head>
 <body>
@@ -25,49 +26,5 @@
 </html>
 
 <script>
-    // Random text generator
-    const texts = [
-        "MAX WANK A TANK MAX GAY",
-        "KOH GER SAIL TO THE SEA, KOH GER SLAYYY",
-    ];
-    
-    function generateRandomText() {
-        const randomIndex = Math.floor(Math.random() * texts.length);
-        document.getElementById('random').innerText = texts[randomIndex];
-    }
-
-    // Ship screensaver
-    const ship = document.getElementById('ship');
-
-    let posX = Math.random() * window.innerWidth; // Random starting x position
-    let posY = Math.random() * window.innerHeight; // Random starting y position
-    let speedX = 2; // Speed in x direction
-    let speedY = 2; // Speed in y direction
-
-    function updatePosition() {
-        posX += speedX;
-        posY += speedY;
-
-        // Check for collision with walls
-        if (posX + 100 > window.innerWidth || posX < 0) {
-            speedX = -speedX; // Reverse direction
-        }
-        if (posY + 100 > window.innerHeight || posY < 0) {
-            speedY = -speedY; // Reverse direction
-        }
-
-        // Update the position of the screensaver
-        ship.style.left = posX + 'px';
-        ship.style.top = posY + 'px';
-
-        requestAnimationFrame(updatePosition); // Keep updating the position
-    }
-
-    // Things to run
-    function randombs() {
-        updatePosition();
-        generateRandomText();
-    }
-
-    window.onload = randombs;
+    randombs();
 </script>

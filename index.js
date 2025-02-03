@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { formatLogs, ceefFormatLogs, greetTime, formatIP, stormwallLogs } = require('./parsing.js');
+const { formatLogs, ceefFormatLogs, greetTime, formatIP, stormwallLogs, networkLogs } = require('./parsing.js');
 const { auth } = require('./auth.js');
 const { fetchBGPAPI } = require('./BGPutils.js');
 
@@ -74,10 +74,10 @@ app.post('/stormwall', (req, res) => {
     res.render('stormwall', { formattedText: `${salam}\n\n${formatted}` });
 });
 
-let networkData;
-
 /* network parsing */
 app.get('/network', (req, res) => {
+    
+    let networkData;
     try {
         // Assign network data variable
         if (app.locals.networkData) {
@@ -113,9 +113,19 @@ app.get('/bgpapi', async (req, res) => {
     }
 });
 
-app.post('/network', (req, res) => {
-    let justtest = "testing";
-    res.render('network', { formattedText: justtest });
+app.post('/network', async (req, res) => {
+
+    // Get the selection
+    let selection = req.body.selection;
+    
+    let networkData = app.locals.networkData;
+    
+    if (!networkData || selection === "None") {
+        res.redirect('network');
+    } else {
+        let formatted = networkLogs(selection, networkData);
+        res.render('network', { formattedText: formatted, tableData: networkData });
+    }
 });
 
 // Run the server

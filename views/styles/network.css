@@ -39,15 +39,30 @@ th {
 }
 
 button {
-    display: inline-block;
-    padding: 10px 15px;
     background-color: #007BFF; /* Button color */
     color: white; /* Text color */
-    text-decoration: none; /* Remove underline */
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 5px; /* Add space above the button */
 }
 
 button:hover {
     background-color: #0056b3; /* Darker color on hover */
+}
+
+.tab-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.tab {
+    padding: 8px 16px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.tab:hover {
+    background: #0056b3;
 }

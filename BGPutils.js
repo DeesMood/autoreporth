@@ -27,12 +27,13 @@ const contaboPrefixes = {
 }
 
 // Function to add labels to each prefix based on which source object they come from
-function addLabelToPrefixes(prefixes, label) {
+function addAttrToPrefixes(prefixes, label, monitoring) {
     const labeledPrefixes = {};
     for (const [prefix, desc] of Object.entries(prefixes)) {
         labeledPrefixes[prefix] = {
             description: desc,
-            label: label
+            label: label,
+            monitoring: monitoring
         };
     }
     return labeledPrefixes;
@@ -118,10 +119,10 @@ async function fetchBGPAPI(){
 
     // Combine all prefixes to a list and add label
     const allPrefixes = {
-        ...addLabelToPrefixes(nmePrefixes, 'NME Equinix SG, Singapore (mrtg.newmediaexpress.com)'),
-        ...addLabelToPrefixes(mtenPrefixes, 'NEX DC M-TEN Jakarta (prtg.cloudata.co.id)'),
-        ...addLabelToPrefixes(edgePrefixes, 'Edge2 DC, Kuningan, Jakarta (prtg-netmon.indo.net.id)'),
-        ...addLabelToPrefixes(contaboPrefixes, 'Contabo, Seattle, USA (prtg-netmon.indo.net.id)')
+        ...addAttrToPrefixes(nmePrefixes, 'NME Equinix SG, Singapore (mrtg.newmediaexpress.com)', 'mrtg.newmediaexpress.com'),
+        ...addAttrToPrefixes(mtenPrefixes, 'NEX DC M-TEN Jakarta (prtg.cloudata.co.id)', 'prtg.cloudata.co.id'),
+        ...addAttrToPrefixes(edgePrefixes, 'Edge2 DC, Kuningan, Jakarta (prtg-netmon.indo.net.id)', 'prtg-netmon.indo.net.id'),
+        ...addAttrToPrefixes(contaboPrefixes, 'Contabo, Seattle, USA (prtg-netmon.indo.net.id)', 'prtg-netmon.indo.net.id')
     };
 
     // Array to store results in JSON 
@@ -143,6 +144,7 @@ async function fetchBGPAPI(){
         const url = new URL(`https://api.bgpview.io/prefix/${prefix}`);
         const desc = attr.description;
         const label = attr.label;
+        const monitoring = attr.monitoring;
 
         const data = await fetchData(prefix, url);
         const upstreams = data.data.asns[0].prefix_upstreams;
@@ -154,7 +156,8 @@ async function fetchBGPAPI(){
                 result.prefix === prefix &&
                 result.desc === desc &&
                 result.stormwall === stormwall &&
-                result.label === label
+                result.label === label &&
+                result.monitoring === monitoring
             );
 
             if (existingEntry) {
@@ -165,7 +168,8 @@ async function fetchBGPAPI(){
                     desc,
                     upstream: `${upstream.description} (AS${upstream.asn})`,
                     stormwall,
-                    label
+                    label,
+                    monitoring
                 });
             }
         });
