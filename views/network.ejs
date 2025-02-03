@@ -10,6 +10,7 @@
    <link rel="stylesheet" href="./styles/parser.css">
    <script src="./scripts/loading.js"></script>
    <script src="./scripts/popup.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
    <title>network autoreport v1.0</title>
 </head>
 <body>
@@ -35,8 +36,11 @@
             <table border="1">
                 <thead>
                    <tr>
-                       <th colspan="4" style="text-align: center; background-color: #007BFF; color: white;">
-                          <strong><h3>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</h3></strong>
+                       <th colspan="4" style="background-color: #007BFF; color: white;">
+                          <div style="display: flex; justify-content: space-between;">
+                             <strong><h3>Dewaweb (AS139456) IP Blocks Allocation (Upstreams)</h3></strong>
+                             <span style="margin-top: auto; margin-bottom: auto;">Last Updated around <%= prevTimestamp %> minutes ago <i id="refreshButton" class="fa fa-refresh" style="cursor: pointer;" onclick="fetchingData('/getnew')"></i></span>
+                          </div>
                        </th>
                    </tr>
                      <tr>
@@ -76,8 +80,6 @@
          <div class="tab-container">
             <% if (formattedText) { %>
                <button class="tab" name="selection" value="None" style="background-color: red; color: white;">Back</button>
-            <% } else { %>
-               <button class="tab" name="selection" value="Refresh" style="background-color: rgb(23, 214, 49); color: white;">Back</button>
             <% } %>
             <button class="tab" name="selection" value="NME">NME</button>
             <button class="tab" name="selection" value="MTEN">M-TEN</button>
@@ -93,7 +95,7 @@
    <script>
 
       // Fetch data on page load
-      window.onload = fetchingData;
+      window.onload = fetchingData('/bgpapi');
 
    </script>
 <% } else { %>

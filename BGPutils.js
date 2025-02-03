@@ -1,5 +1,5 @@
-/* GLOBAL Cache for network upstream table */
-const cache = new Map();
+// Cache var
+let cache = new Map();
 // Cache for 1 hour (in ms)
 const CACHE_EXPIRY = 60 * 60 * 1000;
 
@@ -113,9 +113,29 @@ async function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/* Get cache timestamp */
+function cacheDiff() {
+    let cachedData = null;
+    if (cache.get('tableData')){
+        cachedData = cache.get('tableData');
+
+        const minute = 1000 * 60;
+        const hour = minute * 60;
+        const day = hour * 24;
+        const year = day * 365;
+
+        diffTime = Date.now() - cachedData.timestamp;
+        diffTime = diffTime / minute;
+
+        return Math.round(diffTime);
+    } else {
+        return null;
+    }
+}
+
 /* Send an API request to bgpview.io
 Process the request in a table format used in network page */
-async function fetchBGPAPI(){
+async function fetchBGPAPI(destroyCache){
 
     // Combine all prefixes to a list and add label
     const allPrefixes = {
@@ -128,6 +148,10 @@ async function fetchBGPAPI(){
     // Array to store results in JSON 
     let results = [];
 
+    if (destroyCache) {
+        cache = new Map();
+    }
+    
     // Check if cached data exists and is still valid
     let cachedData = null;
     if (cache.get('tableData')){
@@ -188,4 +212,4 @@ async function fetchBGPAPI(){
     return results;
 }
 
-module.exports = { fetchBGPAPI };
+module.exports = { fetchBGPAPI, cacheDiff };

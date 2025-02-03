@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { formatLogs, ceefFormatLogs, greetTime, formatIP, stormwallLogs, networkLogs } = require('./parsing.js');
 const { auth } = require('./auth.js');
-const { fetchBGPAPI } = require('./BGPutils.js');
+const { fetchBGPAPI, cacheDiff } = require('./BGPutils.js');
 
 const app = express();
 const PORT = 3000;
@@ -76,6 +76,8 @@ app.post('/stormwall', (req, res) => {
 
 /* network parsing */
 app.get('/network', (req, res) => {
+
+    let timestamp = cacheDiff();
     
     let networkData;
     try {
@@ -87,7 +89,7 @@ app.get('/network', (req, res) => {
         }
 
         // Render the network page
-        res.render('network', { formattedText: null, tableData: networkData });
+        res.render('network', { formattedText: null, tableData: networkData, prevTimestamp: timestamp });
     } catch (error) {
         console.error('Error assigning local network data:', error.message);
         res.status(500).send('Error assigning local network data');
@@ -100,7 +102,25 @@ app.get('/bgpapi', async (req, res) => {
 
         // Fetch the data (either from cache or fresh data)
         console.log("Fetching BGP API data...");
-        networkData = await fetchBGPAPI();
+        networkData = await fetchBGPAPI(false);
+        console.log("BGP API data fetched successfully!");
+
+        app.locals.networkData = networkData;
+
+        res.redirect('network');
+
+    } catch (error) {
+        console.error('Error fetching network data:', error.message);
+        res.status(500).send('Error loading network data');
+    }
+});
+
+app.get('/getnew', async (req, res) => {
+    try {
+
+        // Fetch the data (either from cache or fresh data)
+        console.log("Fetching BGP API data...");
+        networkData = await fetchBGPAPI(true);
         console.log("BGP API data fetched successfully!");
 
         app.locals.networkData = networkData;
@@ -119,12 +139,14 @@ app.post('/network', async (req, res) => {
     let selection = req.body.selection;
     
     let networkData = app.locals.networkData;
+
+    let timestamp = cacheDiff();
     
     if (!networkData || selection === "None") {
         res.redirect('network');
     } else {
         let formatted = networkLogs(selection, networkData);
-        res.render('network', { formattedText: formatted, tableData: networkData });
+        res.render('network', { formattedText: formatted, tableData: networkData, prevTimestamp: timestamp });
     }
 });
 
