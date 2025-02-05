@@ -1,9 +1,4 @@
 async function fetchingData(call) {
-    // Show the loading overlay
-    document.getElementById('loading-overlay').removeAttribute('hidden');
-    document.getElementById('data-container').setAttribute('hidden', true);
-    document.getElementById("refreshButton").classList.add('fa-spin');
-
     try {
        // Fetch data from the server
        
@@ -18,6 +13,13 @@ async function fetchingData(call) {
        console.error('Error fetching data:', error);
        alert('Failed to load data');
     }
+ }
+
+ function noData() {
+   // Show the loading overlay
+   document.getElementById('loading-overlay').removeAttribute('hidden');
+   document.getElementById('data-container').setAttribute('hidden', true);
+   document.getElementById("refreshButton").classList.add('fa-spin');
  }
 
  function hasData() {

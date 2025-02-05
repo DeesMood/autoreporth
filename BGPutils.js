@@ -133,6 +133,27 @@ function cacheDiff() {
     }
 }
 
+// Get Cache Expiration
+function getCacheExp() {
+    let cachedData = null;
+    if (cache.get('tableData')){
+        cachedData = cache.get('tableData');
+    }
+    else {
+        // If there is no cache
+        return true;
+    }
+    if(cachedData && (Date.now() - cachedData.timestamp) > CACHE_EXPIRY) {
+        console.log("Cache expired.");
+        // Return true if cache expired
+        return true;
+    }
+    else {
+        // Return false if cache has not expired
+        return false;
+    }
+}
+
 /* Send an API request to bgpview.io
 Process the request in a table format used in network page */
 async function fetchBGPAPI(destroyCache){
@@ -212,4 +233,4 @@ async function fetchBGPAPI(destroyCache){
     return results;
 }
 
-module.exports = { fetchBGPAPI, cacheDiff };
+module.exports = { fetchBGPAPI, cacheDiff, getCacheExp };

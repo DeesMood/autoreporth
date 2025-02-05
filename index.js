@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { formatLogs, ceefFormatLogs, greetTime, formatIP, stormwallLogs, networkLogs } = require('./parsing.js');
 const { auth } = require('./auth.js');
-const { fetchBGPAPI, cacheDiff } = require('./BGPutils.js');
+const { fetchBGPAPI, cacheDiff, getCacheExp } = require('./BGPutils.js');
 
 const app = express();
 const PORT = 3000;
@@ -75,18 +75,19 @@ app.post('/stormwall', (req, res) => {
 });
 
 /* network parsing */
-app.get('/network', (req, res) => {
+app.get('/network', async (req, res) => {
+
+    let networkData;
+    if (getCacheExp()) {
+        networkData = await fetchBGPAPI(getCacheExp);
+        app.locals.networkData = networkData;
+    } else {
+        networkData = app.locals.networkData;
+    }
 
     let timestamp = cacheDiff();
     
-    let networkData;
     try {
-        // Assign network data variable
-        if (app.locals.networkData) {
-            networkData = app.locals.networkData;
-        } else {
-            networkData = null;
-        }
 
         // Render the network page
         res.render('network', { formattedText: null, tableData: networkData, prevTimestamp: timestamp });
