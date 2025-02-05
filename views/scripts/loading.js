@@ -1,4 +1,7 @@
 async function fetchingData(call) {
+   document.getElementById('loading-overlay').removeAttribute('hidden');
+   document.getElementById('data-container').setAttribute('hidden', true);
+   document.getElementById("refreshButton").classList.add('fa-spin');
     try {
        // Fetch data from the server
        
