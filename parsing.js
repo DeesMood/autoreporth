@@ -319,15 +319,14 @@ async function getCategory(ipAddr) {
 function getTimeStormwall(lines){
     // Filter the Hours 
     let time = lines.substr(lines.indexOf(":") - 2, 2);
-    time = (+time + 4);
-    if(time >= 24){
-        time -= 24;
+    time = (+time);
+    if (lines.includes("UTC+3")){
+        time += 4;
+    } else {
+        time += 7;
     }
-    // Check whether or not someone uses the old / new dashboard
-    const date = new Date();
-    const hour = date.getHours();
-    if (Math.abs(time - hour) > 1){
-        time += 3;
+    if (time >= 24){
+        time -= 24;
     }
     time = time.toString().padStart(2,"0");
     // Get the minutes
